@@ -1,0 +1,46 @@
+.btn-operand {
+
+    height: 73px;
+    width: 78px;
+
+    background-color:#3D65B1;
+    color: white;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+
+}
+
+.btn-operator{
+
+    height: 73px;
+    width: 78px;
+
+    background-color: #F3994B;
+    color: white;
+
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+
+}
+
+.btn-equals{
+    height: 80px;
+    width: 260px ;
+
+    background-color: #27AE60;
+    color: white;
+
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+
+}
+
+button:hover{
+    opacity: 0.8;
+}
+button:active{
+    opacity: 0.6;
+}
