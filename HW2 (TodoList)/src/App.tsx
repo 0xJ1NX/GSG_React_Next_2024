@@ -24,12 +24,12 @@ function App() {
   }
 
   return (
-    <>
+    <div className="container">
       <h1>Todo App - {new Date().toDateString()}</h1>
       <Form onSubmit={handleNewItem} />
       <Dashboard items={todos} />
       <TodoList items={todos} onToggle={handleTaskToggle} onDelete={handleDelete} />
-    </>
+    </div>
   )
 }
 
