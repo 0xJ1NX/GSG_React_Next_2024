@@ -4,41 +4,42 @@ import About from './screens/About.screen';
 import NotFound from './screens/NotFound.screen';
 import { Route, Routes } from 'react-router-dom';
 import StudentDetails from './screens/StudentDetails.screen';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useReducer } from 'react';
 import useLocalStorage from './hooks/local-storage.hook';
 import { IStudent } from './types';
 import AddStudent from './screens/AddStudent.screen';
 import Login from './screens/Login.screen';
 import NavBar from './components/nav-bar/nav-bar.component';
+import reducer from './state/reducer'
 
 function App() {
   const h1Style = { color: '#69247C', fontSize: '24px' };
 
-  const [studentsList, setStudentsList] = useState<IStudent[]>([]);
-  const [totalAbsents, setTotalAbsents] = useState(0);
+  // Use reducer
+  const [state, dispatch] = useReducer(reducer, { students: [], totalAbsents: 0 });
 
-  const { storedData } = useLocalStorage(studentsList, 'students-list');
+  const { storedData } = useLocalStorage(state.students, 'students-list');
+
 
   useEffect(() => {
     const stdList: IStudent[] = storedData || [];
     const totalAbs = stdList.reduce((prev, cur) => { return prev + cur.absents }, 0);
-    setTotalAbsents(totalAbs);
-    setStudentsList(stdList);
+
+    dispatch({ type: "INIT_STATE", payload: { studentsList: stdList, totalAbsents: totalAbs } });
+    
+
   }, [storedData]);
 
   const removeFirst = () => {
-    const newList = [...studentsList];
-    newList.shift();  // removes the first item
-    setStudentsList(newList);
+    dispatch({ type: "REMOVE_FIRST" });
   }
 
   const handleAbsentChange = (id: string, change: number) => {
-    setTotalAbsents(totalAbsents + change);
-    setStudentsList(studentsList.map(std => std.id === id ? { ...std, absents: std.absents + change } : std));
+    dispatch({ type: "UPDATE_ABSENT", payload: { id, change } });
   }
 
   const handleAddStudent = (newStudent: IStudent) => {
-    setStudentsList([newStudent, ...studentsList]);
+    dispatch({ type: "ADD_STUDENT", payload: newStudent });
   }
 
   return (
@@ -49,8 +50,8 @@ function App() {
         <Route path='/'
           element={
             <Main
-              studentsList={studentsList}
-              totalAbsents={totalAbsents}
+              studentsList={state.students}
+              totalAbsents={state.totalAbsents}
               onAbsent={handleAbsentChange}
               onRemove={removeFirst}
             />
